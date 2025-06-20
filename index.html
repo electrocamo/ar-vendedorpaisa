@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>RA Restaurante</title>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.136.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/mindar-image-three.prod.js"></script>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { width: 100%; height: 100%; display: block; }
+  </style>
+</head>
+<body>
+    <div>Prueba VR</div>
+  <script type="module">
+    import {loadGLTF} from "https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/utils/loader.js";
+
+    const mindarThree = new window.MINDAR.IMAGE.MindARThree({
+      container: document.body,
+      imageTargetSrc: "./target.mind"
+    });
+
+    const {renderer, scene, camera} = mindarThree;
+
+    const anchor = mindarThree.addAnchor(0);
+
+    const start = async () => {
+    try {
+        const model = await loadGLTF("./plato1.glb");
+        model.scene.scale.set(0.4, 0.4, 0.4);
+        model.scene.position.set(0, 0, 0);
+
+        anchor.group.add(model.scene);
+
+        await mindarThree.start();
+        renderer.setAnimationLoop(() => {
+        renderer.render(scene, camera);
+        });
+        alert("La camara se esta iniciando");
+    } catch (e) {
+        alert("No se pudo iniciar la cámara. Verifica los permisos y vuelve a intentar.");
+        console.error(e);
+    }
+    };
+
+    start();
+  </script>
+</body>
+</html>
